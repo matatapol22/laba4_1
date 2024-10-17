@@ -50,6 +50,20 @@ class MainActivity : AppCompatActivity() {
             disableAnswerButtons()
         }
 
+        // Обработка нажатия на кнопку Next
+        nextButton.setOnClickListener {
+            currentIndex++
+            if (currentIndex >= questionBank.size) {
+                nextButton.isEnabled = false
+                Toast.makeText(
+                    this, "Правильные ответы: $correctAnswers из ${questionBank.size}",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                updateQuestion()
+            }
+        }
+
 
     }
 
