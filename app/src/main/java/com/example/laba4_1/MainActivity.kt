@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("currentIndex", currentIndex)
+    }
+
 
 }
 data class Question(val text: String, val answer: Boolean)
