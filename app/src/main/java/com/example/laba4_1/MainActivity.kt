@@ -60,6 +60,15 @@ class MainActivity : AppCompatActivity() {
         falseButton.isClickable = true
     }
 
+    private fun updateQuestion() {
+        val questionText = questionBank[currentIndex].text
+        questionTextView.text = questionText
+        enableAnswerButtons() // Включаем кнопки
+        if (currentIndex == questionBank.size - 1) {
+            nextButton.isEnabled = false // Делаем кнопку Next невидимой на последнем вопросе
+        }
+    }
+
 
 }
 data class Question(val text: String, val answer: Boolean)
