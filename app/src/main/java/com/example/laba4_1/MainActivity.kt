@@ -28,6 +28,28 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        currentIndex = savedInstanceState?.getInt("currentIndex") ?: 0
+
+        questionTextView = findViewById(R.id.questionTextView)
+        trueButton = findViewById(R.id.trueButton)
+        falseButton = findViewById(R.id.falseButton)
+        nextButton = findViewById(R.id.nextButton)
+
+        // Устанавливаем текущий вопрос
+        updateQuestion()
+
+        // Обработка нажатия на кнопку True
+        trueButton.setOnClickListener {
+            checkAnswer(true)
+            disableAnswerButtons()
+        }
+
+        // Обработка нажатия на кнопку False
+        falseButton.setOnClickListener {
+            checkAnswer(false)
+            disableAnswerButtons()
+        }
+
 
     }
 
