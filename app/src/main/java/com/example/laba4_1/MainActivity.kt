@@ -46,6 +46,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun disableAnswerButtons() {
+        trueButton.isEnabled = false
+        falseButton.isEnabled = false
+        trueButton.isClickable = false
+        falseButton.isClickable = false
+    }
+
 
 }
 data class Question(val text: String, val answer: Boolean)
