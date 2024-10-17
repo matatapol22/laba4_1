@@ -3,6 +3,7 @@ package com.example.laba4_1
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
 
     }
@@ -32,6 +34,16 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("currentIndex", currentIndex)
+    }
+
+    private fun checkAnswer(userAnswer: Boolean) {
+        val correctAnswer = questionBank[currentIndex].answer
+        if (userAnswer == correctAnswer) {
+            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show()
+            correctAnswers++
+        } else {
+            Toast.makeText(this, "Incorrect!", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
