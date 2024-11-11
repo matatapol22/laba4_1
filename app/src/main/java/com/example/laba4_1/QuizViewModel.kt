@@ -25,4 +25,13 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
             currentIndex.value = newIndex
         }
     }
+
+    fun checkAnswer(userAnswer: Boolean): Boolean {
+        val isCorrect = userAnswer == currentQuestion.answer
+        if (isCorrect) {
+
+            correctAnswers.value = (correctAnswers.value ?: 0) + 1
+        }
+        return isCorrect
+    }
 }
