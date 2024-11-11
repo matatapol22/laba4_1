@@ -15,4 +15,8 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     val currentIndex = savedStateHandle.getLiveData("currentIndex", 0)
     val correctAnswers = savedStateHandle.getLiveData("correctAnswers", 0)
     val hintsUsed = savedStateHandle.getLiveData("hintsUsed", 0)
+
+    val currentQuestion: Question
+        get() = questionBank[currentIndex.value ?: 0]
+
 }
