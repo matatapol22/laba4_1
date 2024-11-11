@@ -5,4 +5,9 @@ import androidx.lifecycle.ViewModel
 
 class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
+    private val questionBank = listOf(
+        Question("Ты человек?", true),
+        Question("Осьминог водоплавающее?", true),
+        Question("2 + 2 = 5?", false)
+    )
 }
