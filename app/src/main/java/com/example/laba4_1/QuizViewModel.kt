@@ -42,4 +42,6 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         }
         return false
     }
+
+    fun isLastQuestion() = currentIndex.value == questionBank.size - 1
 }
