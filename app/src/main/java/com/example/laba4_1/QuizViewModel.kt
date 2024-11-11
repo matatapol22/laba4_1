@@ -34,4 +34,12 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         }
         return isCorrect
     }
+
+    fun useHint(): Boolean {
+        if ((hintsUsed.value ?: 0) < 3) {
+            hintsUsed.value = (hintsUsed.value ?: 0) + 1
+            return true
+        }
+        return false
+    }
 }
