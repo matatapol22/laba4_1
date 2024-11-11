@@ -19,4 +19,10 @@ class QuizViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     val currentQuestion: Question
         get() = questionBank[currentIndex.value ?: 0]
 
+    fun moveToNextQuestion() {
+        val newIndex = (currentIndex.value ?: 0) + 1
+        if (newIndex < questionBank.size) { // Проверка, что индекс не выходит за границы массива вопросов
+            currentIndex.value = newIndex
+        }
+    }
 }
