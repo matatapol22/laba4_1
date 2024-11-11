@@ -12,15 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Laba4_1"
         tools:targetApi="31" >
+
+        <!-- MainActivity с фильтром для запуска приложения -->
         <activity
             android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Добавляем CheatActivity -->
+        <activity
+            android:name=".CheatActivity"
+            android:label="@string/cheat_activity_label"
+            android:exported="false"
+            tools:ignore="WrongManifestParent" />
+
     </application>
 
 </manifest>

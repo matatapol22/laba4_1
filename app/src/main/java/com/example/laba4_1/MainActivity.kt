@@ -8,103 +8,108 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.content.Intent
+import androidx.activity.viewModels
+import com.example.laba4_1.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
-    private val questionBank = listOf(
-        Question("Ты человек?", true),
-        Question("Осьминог водоплавающее?", true),
-        Question("2 + 2 = 5?", false)
-    )
-
-    private var currentIndex = 0
-    private var correctAnswers = 0
-
-    private lateinit var questionTextView: TextView
-    private lateinit var trueButton: Button
-    private lateinit var falseButton: Button
-    private lateinit var nextButton: Button
+    private val quizViewModel: QuizViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
+    private var cheatCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        currentIndex = savedInstanceState?.getInt("currentIndex") ?: 0
-
-        questionTextView = findViewById(R.id.questionTextView)
-        trueButton = findViewById(R.id.trueButton)
-        falseButton = findViewById(R.id.falseButton)
-        nextButton = findViewById(R.id.nextButton)
-
-        // Устанавливаем текущий вопрос
+        // Обновляем вопрос
         updateQuestion()
 
-        // Обработка нажатия на кнопку True
-        trueButton.setOnClickListener {
+        // Обработка нажатий
+        binding.trueButton.setOnClickListener {
             checkAnswer(true)
             disableAnswerButtons()
         }
 
-        // Обработка нажатия на кнопку False
-        falseButton.setOnClickListener {
+        binding.falseButton.setOnClickListener {
             checkAnswer(false)
             disableAnswerButtons()
         }
 
-        // Обработка нажатия на кнопку Next
-        nextButton.setOnClickListener {
-            currentIndex++
-            if (currentIndex >= questionBank.size) {
-                nextButton.isEnabled = false
-                Toast.makeText(
-                    this, "Правильные ответы: $correctAnswers из ${questionBank.size}",
-                    Toast.LENGTH_LONG
-                ).show()
-            } else {
-                updateQuestion()
-            }
+        binding.nextButton.setOnClickListener {
+            quizViewModel.moveToNextQuestion()
+            updateQuestion()
         }
 
-
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt("currentIndex", currentIndex)
+        binding.cheatButton.setOnClickListener {
+            if (cheatCount < 3) {
+                cheatCount++
+                val intent = Intent(this, CheatActivity::class.java)
+                intent.putExtra("answer", quizViewModel.getCurrentQuestionAnswer())
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "Подсказки закончились!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.getCurrentQuestionAnswer()
         if (userAnswer == correctAnswer) {
-            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show()
-            correctAnswers++
+            Toast.makeText(this, "Правильно!", Toast.LENGTH_SHORT).show()
+            quizViewModel.correctAnswers++
         } else {
-            Toast.makeText(this, "Incorrect!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Неправильно!", Toast.LENGTH_SHORT).show()
         }
+
+        // Скрываем кнопки ответов после ответа на вопрос
+        disableAnswerButtons()
     }
 
     private fun disableAnswerButtons() {
-        trueButton.isEnabled = false
-        falseButton.isEnabled = false
-        trueButton.isClickable = false
-        falseButton.isClickable = false
+        binding.trueButton.isEnabled = false
+        binding.falseButton.isEnabled = false
+        binding.trueButton.visibility = android.view.View.INVISIBLE
+        binding.falseButton.visibility = android.view.View.INVISIBLE
     }
 
     private fun enableAnswerButtons() {
-        trueButton.isEnabled = true
-        falseButton.isEnabled = true
-        trueButton.isClickable = true
-        falseButton.isClickable = true
+        binding.trueButton.isEnabled = true
+        binding.falseButton.isEnabled = true
+        binding.trueButton.visibility = android.view.View.VISIBLE
+        binding.falseButton.visibility = android.view.View.VISIBLE
     }
 
     private fun updateQuestion() {
-        val questionText = questionBank[currentIndex].text
-        questionTextView.text = questionText
-        enableAnswerButtons() // Включаем кнопки
-        if (currentIndex == questionBank.size - 1) {
-            nextButton.isEnabled = false // Делаем кнопку Next невидимой на последнем вопросе
+        // Обновляем текст вопроса
+        binding.questionTextView.text = quizViewModel.getCurrentQuestionText()
+
+        // Включаем кнопки ответа для нового вопроса
+        enableAnswerButtons()
+
+        // Если это последний вопрос, блокируем и скрываем кнопку "Next"
+        if (quizViewModel.currentIndex == quizViewModel.questionBank.size - 1) {
+            binding.nextButton.isEnabled = false
+            binding.nextButton.visibility = android.view.View.INVISIBLE
+
+            // Показ результата после последнего вопроса
+            showResult()
+        } else {
+            binding.nextButton.isEnabled = true
+            binding.nextButton.visibility = android.view.View.VISIBLE
         }
     }
 
-
+    private fun showResult() {
+        val totalQuestions = quizViewModel.questionBank.size
+        val correctAnswers = quizViewModel.correctAnswers
+        Toast.makeText(
+            this,
+            "Правильные ответы: $correctAnswers из $totalQuestions",
+            Toast.LENGTH_LONG
+        ).show()
+    }
 }
 data class Question(val text: String, val answer: Boolean)
